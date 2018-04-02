@@ -258,7 +258,6 @@ def robot_obstacle_intersection(robot, obstacle):
     robot: a list of vertices (number of vertices > 2), e.g. [(x1, y1), (x2, y2), (x3, y3)]
     obstacle: a list of vertices (number of vertices > 2), e.g. [(x1, y1), (x2, y2), (x3, y3)]
     return whether a robot and a single obstacle collides
-
     '''
     robot_segs = get_segments(robot)
     for robot_seg in robot_segs:
