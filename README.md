@@ -28,3 +28,8 @@ Senario 4: Robot free (no collision)
 The first line of it indicates the total number of objects (obstacles + robot), followed by information about each object. The first line of each object is the number of its edges, followed by positions of each vertices. Whether these vertices show up in a clock-wise or counter clock-wise manner does not make a difference here as long as they are recorded in order. 
 
 The last object is interpretted by the program as robot.
+
+## Assumption
+This program assumes that 
+- each obstacle or robot consists of at least three different vertices;
+- each obstacle or robot is either concave or convex and cannot be self-intersecting.
