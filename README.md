@@ -1,6 +1,9 @@
 # collision_checker
 A simple checker of polygon collisions, with plotting visualization.
 
+## Prerequisites
+Please use ```python 3.6.5``` and ```matplotlib 2.2.2```. Please do not use ```python 2.7``` because it interpret results of integer dividions as integers, etc.
+
 ## Examples
 Orange polygon represents the robot, violet polygons represent obstacles
 
@@ -32,4 +35,4 @@ The last object is interpretted by the program as robot.
 ## Assumption
 This program assumes that 
 - each obstacle or robot consists of at least three different vertices;
-- each obstacle or robot is either concave or convex and cannot be self-intersecting.
+- each obstacle or robot is either concave or convex and cannot be self-intersecting. This requires all vertices of an object shows up in order (either clockwise or counter clockwise) in the ```world_objects.txt```.
