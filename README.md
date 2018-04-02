@@ -19,7 +19,11 @@ Senario 3: Robot collides with obstacles by being contained in an obstacle
 - **output**: ```[3]```
 ![](https://github.com/JingxiXu/collision_checker/blob/master/images/inside.png)
 
-Senario 4: Robot free (no collision)
+Senario 4: Robot collides with obstacles by only touching their edges
+- **output**: ```None```
+![](https://github.com/JingxiXu/collision_checker/blob/master/images/touch.png)
+
+Senario 5: Robot free (no collision)
 - **output**: ```None```
 ![](https://github.com/JingxiXu/collision_checker/blob/master/images/no_collision.png)
 
