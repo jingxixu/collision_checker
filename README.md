@@ -7,23 +7,23 @@ Please use ```python 3.6.5``` and ```matplotlib 2.2.2```. Please do not use ```p
 ## Examples
 Orange polygon represents the robot, violet polygons represent obstacles
 
-Senario 1: Robot collides with obstacles by intersecting edges
+Scenario 1: Robot collides with obstacles by intersecting edges
 - **output**: ```[4, 8, 9]```
 ![](https://github.com/JingxiXu/collision_checker/blob/master/images/edges.png)
 
-Senario 2: Robot collides with obstacles by containing obstacles
+Scenario 2: Robot collides with obstacles by containing obstacles
 - **output**: ```[8, 9]```
 ![](https://github.com/JingxiXu/collision_checker/blob/master/images/outside.png)
 
-Senario 3: Robot collides with obstacles by being contained in an obstacle
+Scenario 3: Robot collides with obstacles by being contained in an obstacle
 - **output**: ```[7]```
 ![](https://github.com/JingxiXu/collision_checker/blob/master/images/inside.png)
 
-Senario 4: Robot collides with obstacles by only touching their edges
+Scenario 4: Robot collides with obstacles by only touching their edges
 - **output**: ```[2, 4, 7]```
 ![](https://github.com/JingxiXu/collision_checker/blob/master/images/touch.png)
 
-Senario 5: Robot free (no collision)
+Scenario 5: Robot free (no collision)
 - **output**: ```None```
 ![](https://github.com/JingxiXu/collision_checker/blob/master/images/no_collision.png)
 
