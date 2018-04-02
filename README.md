@@ -34,7 +34,7 @@ Scenario 5: Robot free (no collision)
 
 The first line of it indicates the total number of objects (obstacles + robot), followed by information about each object. The first line of each object is the number of its edges, followed by positions of each vertices. Whether these vertices show up in a clock-wise or counter clock-wise manner does not make a difference here as long as they are recorded in order. 
 
-The last object is interpretted by the program as robot.
+The last object is interpretted by the program as the robot.
 
 ## Assumption
 This program assumes that 
