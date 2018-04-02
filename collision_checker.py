@@ -165,7 +165,7 @@ def seg_obstacle_intersection(seg, obstacle):
             return True
     return False
 
-def line_seg_intersection(point, seg):
+def horizontal_line_seg_intersection(point, seg):
     '''
     point: (x, y)
     seg: a list of 2 vertices, e.g. [(x1, y1), (x2, y2)]
@@ -188,10 +188,33 @@ def line_seg_intersection(point, seg):
     x = (y-b)/k #k!=0
     return (x, y)
 
+def vertical_line_seg_intersection(point, seg):
+    '''
+    point: (x, y)
+    seg: a list of 2 vertices, e.g. [(x1, y1), (x2, y2)]
+    Given a point, draw a line through that point which is parallel to x-axis,
+    return the positions of intersections between the line and the segment, return False if there is no intersection
+    '''
+    x = float(point[0])
+    if max(seg[0][0], seg[1][0]) < x or min(seg[0][0], seg[1][0]) > x:
+        return False
+    # segment parallel to x-axis, this can even be true if the point is inside the obstacle. think about a concave polygon
+    if seg[0][1] == seg[1][1]:
+        return ((x, seg[0][1]))
+    # segment vertical to x-axis
+    if seg[0][0] == seg[1][0]:
+        y = float(seg[0][1])
+        return (x, y)
+    # segment not parallel nor vertical to x-axis
+    k = (seg[0][1]-seg[1][1]) / (seg[0][0]-seg[1][0])
+    b = seg[0][1]-k*seg[0][0]
+    y = k*x + b
+    return (x, y)
+
 def is_point_in_obstacle(point, obstacle):
     temp = []
     for seg in get_segments(obstacle):
-        temp.append(line_seg_intersection(point, seg))
+        temp.append(horizontal_line_seg_intersection(point, seg))
     ### if there are some intersections, check how many of them are on the right side and how many on the left side
     left = 0
     right = 0
@@ -202,10 +225,25 @@ def is_point_in_obstacle(point, obstacle):
                 right+=1
             else:
                 left+=1
+    ### now check vertical direction
+    temp = []
+    for seg in get_segments(obstacle):
+        temp.append(vertical_line_seg_intersection(point, seg))
+    ### if there are some intersections, check how many of them are on the right side and how many on the left side
+    up = 0
+    down = 0
+    for intersection in temp:
+        if intersection != False:
+            # they can never be equal
+            if point[1] < intersection[1]:
+                up+=1
+            else:
+                down+=1
     ### if the point is in the polygon (no matter convex or concave)
-    if left%2 == 1 or right%2 == 1:
+    if (up%2 == 1 and right%2 == 1) or (up%2 == 1 and left%2 == 1) or (down%2 == 1 and right%2 == 1) or (down%2 == 1 and left%2 == 1):
         return True
     return False
+
 
 def robot_obstacle_intersection(robot, obstacle):
     '''
@@ -222,10 +260,12 @@ def robot_obstacle_intersection(robot, obstacle):
     # randomly pick a point on the robot and see if it is in the obstacle
     robot_point = robot[0]
     if is_point_in_obstacle(robot_point, obstacle) == True:
+        print('contained')
         return True
     # also check if the obstacle is covered in the robot
     obstacle_point = obstacle[0]
     if is_point_in_obstacle(obstacle_point, robot) == True:
+        print('contain')
         return True
     return False
 
