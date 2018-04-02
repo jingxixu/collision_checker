@@ -32,4 +32,4 @@ The last object is interpretted by the program as robot.
 ## Assumption
 This program assumes that 
 - each obstacle or robot consists of at least three different vertices;
-- each obstacle or robot is either concave or convex and cannot be self-intersecting.
+- each obstacle or robot is either concave or convex and cannot be self-intersecting. This requires all vertices of an object shows up in order (either clockwise or counter clockwise) in the ```world_objects.txt```.
