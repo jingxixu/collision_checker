@@ -2,7 +2,7 @@
 A simple checker of polygon collisions, with plotting visualization.
 
 ## Prerequisites
-Please use ```python 3.6.5``` and ```matplotlib 2.2.2```. Please do not use ```python 2.7``` because it interpret results of integer dividions as integers, etc.
+Please use ```python 3.6.5``` and ```matplotlib 2.2.2```. Please do not use ```python 2.7``` because it interprets results of integer dividions as integers, etc.
 
 ## Examples
 Orange polygon represents the robot, violet polygons represent obstacles
