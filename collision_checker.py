@@ -1,8 +1,7 @@
 import matplotlib.pyplot as plt
 from matplotlib.path import Path
 import matplotlib.patches as patches
-import argparse
-### the above packages are for plotting and parsing command arguments only
+### the above packages are for plotting only
 ### they are never used in computation
 import numpy as np
 
@@ -166,6 +165,48 @@ def seg_obstacle_intersection(seg, obstacle):
             return True
     return False
 
+def line_seg_intersection(point, seg):
+    '''
+    point: (x, y)
+    seg: a list of 2 vertices, e.g. [(x1, y1), (x2, y2)]
+    Given a point, draw a line through that point which is parallel to x-axis,
+    return the positions of intersections between the line and the segment, return False if there is no intersection
+    '''
+    y = float(point[1])
+    if max(seg[0][1], seg[1][1]) < y or min(seg[0][1], seg[1][1]) > y:
+        return False
+    # segment parallel to x-axis, this can even be true if the point is inside the obstacle. think about a concave polygon
+    if seg[0][1] == seg[1][1]:
+        x = float(seg[0][0])
+        return (x, y)
+    # segment vertical to x-axis
+    if seg[0][0] == seg[1][0]:
+        return ((seg[0][0], y))
+    # segment not parallel nor vertical to x-axis
+    k = (seg[0][1]-seg[1][1]) / (seg[0][0]-seg[1][0])
+    b = seg[0][1]-k*seg[0][0]
+    x = (y-b)/k #k!=0
+    return (x, y)
+
+def is_point_in_obstacle(point, obstacle):
+    temp = []
+    for seg in get_segments(obstacle):
+        temp.append(line_seg_intersection(point, seg))
+    ### if there are some intersections, check how many of them are on the right side and how many on the left side
+    left = 0
+    right = 0
+    for intersection in temp:
+        if intersection != False:
+            # they can never be equal
+            if point[0] < intersection[0]:
+                right+=1
+            else:
+                left+=1
+    ### if the point is in the polygon (no matter convex or concave)
+    if left%2 == 1 or right%2 == 1:
+        return True
+    return False
+
 def robot_obstacle_intersection(robot, obstacle):
     '''
     robot: a list of vertices (number of vertices > 2), e.g. [(x1, y1), (x2, y2), (x3, y3)]
@@ -177,6 +218,15 @@ def robot_obstacle_intersection(robot, obstacle):
         # robot segment intersect with obstacle
         if seg_obstacle_intersection(robot_seg, obstacle)!=False:
             return True
+    # IMPORTANT: now, check if the robot covered in the obstacle
+    # randomly pick a point on the robot and see if it is in the obstacle
+    robot_point = robot[0]
+    if is_point_in_obstacle(robot_point, obstacle) == True:
+        return True
+    # also check if the obstacle is covered in the robot
+    obstacle_point = obstacle[0]
+    if is_point_in_obstacle(obstacle_point, robot) == True:
+        return True
     return False
 
 def collision_checker(obstacles, robot):
@@ -202,4 +252,7 @@ def main():
 
 
 if __name__ == "__main__":
+    # point = (6, 1)
+    # obstacle = [(0, 0), (5, 0), (5, 5), (2, 5)]
+    # print(is_point_in_obstacle(point, obstacle))
     main()
