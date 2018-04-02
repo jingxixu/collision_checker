@@ -5,9 +5,10 @@ import matplotlib.patches as patches
 ### they are never used in computation
 import numpy as np
 
-### assume segment must have 2 different vertices
-### assume obstacle and robot must have at least 3 different vertices
-### assume obstacle and robot cannot be self-intersecting, and can only be concave or convex
+### assume that segment must have 2 different vertices
+### assume that obstacle and robot must have at least 3 different vertices
+### assume that obstacle and robot cannot be self-intersecting, and can only be concave or convex, 
+### so that in the txt file, their vertices mush appear in order
 
 def load_objects(object_path):
     '''
@@ -73,7 +74,7 @@ def plot_verification(obstacles, robot):
 
 def get_segments(obstacle):
     '''
-    return a list of all segments in that obstacle
+    return a list of all segments in an obstacle
     '''
     segs = []
     for i in range(len(obstacle)-1):
@@ -87,7 +88,7 @@ def seg_seg_intersection(seg1, seg2):
     A segment is part of a line, which is bounded by two end points
     seg1: a list of tuples [(x1, y1), (x2, y2)]
     seg2: a list of tuples [(x1, y1), (x2, y2)]
-    return whether two segments intersect or not (False if not intersecting)
+    return whether two segments intersect or not (False if not intersecting; True or a tuple if intersecting)
     '''
 
     # the interval of x value where the intersection must lie in
@@ -122,7 +123,7 @@ def seg_seg_intersection(seg1, seg2):
         y_intersection = k1 * x_intersection + b1
         return (x_intersection, y_intersection)
 
-    # seg1 is vertical
+    # seg1 is vertical to x-axis
     if seg1[0][0] == seg1[1][0] and seg2[0][0] != seg2[1][0]:
         k2 = (seg2[0][1]-seg2[1][1]) / (seg2[0][0]-seg2[1][0])
         b2 = seg2[0][1]-k2*seg2[0][0]
@@ -134,7 +135,7 @@ def seg_seg_intersection(seg1, seg2):
             return False
         return (x_intersection, y_intersection)
 
-    # seg2 is vertical
+    # seg2 is vertical to x-axis
     if seg2[0][0] == seg2[1][0] and seg1[0][0] != seg1[1][0]:
         k1 = (seg1[0][1]-seg1[1][1]) / (seg1[0][0]-seg1[1][0])
         b1 = seg1[0][1]-k1*seg1[0][0]
@@ -181,7 +182,8 @@ def horizontal_line_seg_intersection(point, seg):
         return (x, y)
     # segment vertical to x-axis
     if seg[0][0] == seg[1][0]:
-        return ((seg[0][0], y))
+        x = float(seg[0][0])
+        return (x, y)
     # segment not parallel nor vertical to x-axis
     k = (seg[0][1]-seg[1][1]) / (seg[0][0]-seg[1][0])
     b = seg[0][1]-k*seg[0][0]
@@ -192,7 +194,7 @@ def vertical_line_seg_intersection(point, seg):
     '''
     point: (x, y)
     seg: a list of 2 vertices, e.g. [(x1, y1), (x2, y2)]
-    Given a point, draw a line through that point which is parallel to x-axis,
+    Given a point, draw a line through that point which is vertical to x-axis,
     return the positions of intersections between the line and the segment, return False if there is no intersection
     '''
     x = float(point[0])
@@ -200,7 +202,8 @@ def vertical_line_seg_intersection(point, seg):
         return False
     # segment parallel to x-axis, this can even be true if the point is inside the obstacle. think about a concave polygon
     if seg[0][1] == seg[1][1]:
-        return ((x, seg[0][1]))
+        y = float(seg[0][1])
+        return (x, y)
     # segment vertical to x-axis
     if seg[0][0] == seg[1][0]:
         y = float(seg[0][1])
@@ -212,6 +215,11 @@ def vertical_line_seg_intersection(point, seg):
     return (x, y)
 
 def is_point_in_obstacle(point, obstacle):
+    '''
+    point: (x, y)
+    obstacle: a list of tuple vertices, e.g. [(x1, y1), (x2, y2), (x3, y3)]
+    Given a point which is not on the edges of obstable, return whether this point is inside or outside of that obstacle
+    '''
     temp = []
     for seg in get_segments(obstacle):
         temp.append(horizontal_line_seg_intersection(point, seg))
@@ -229,7 +237,7 @@ def is_point_in_obstacle(point, obstacle):
     temp = []
     for seg in get_segments(obstacle):
         temp.append(vertical_line_seg_intersection(point, seg))
-    ### if there are some intersections, check how many of them are on the right side and how many on the left side
+    ### if there are some intersections, check how many of them are on the up side and how many on the down side
     up = 0
     down = 0
     for intersection in temp:
@@ -249,6 +257,7 @@ def robot_obstacle_intersection(robot, obstacle):
     '''
     robot: a list of vertices (number of vertices > 2), e.g. [(x1, y1), (x2, y2), (x3, y3)]
     obstacle: a list of vertices (number of vertices > 2), e.g. [(x1, y1), (x2, y2), (x3, y3)]
+    return whether a robot and a single obstacle collides
 
     '''
     robot_segs = get_segments(robot)
@@ -256,29 +265,30 @@ def robot_obstacle_intersection(robot, obstacle):
         # robot segment intersect with obstacle
         if seg_obstacle_intersection(robot_seg, obstacle)!=False:
             return True
-    # IMPORTANT: now, check if the robot covered in the obstacle
+    # IMPORTANT: now, check if the robot is contained in the obstacle
     # randomly pick a point on the robot and see if it is in the obstacle
     robot_point = robot[0]
     if is_point_in_obstacle(robot_point, obstacle) == True:
-        print('contained')
         return True
-    # also check if the obstacle is covered in the robot
+    # also check if the obstacle is contained in the robot
     obstacle_point = obstacle[0]
     if is_point_in_obstacle(obstacle_point, robot) == True:
-        print('contain')
         return True
     return False
 
 def collision_checker(obstacles, robot):
     '''
     obstacles: a list of lists of vertices of obstacles, e.g. [[(0,0), (0,1), (1,1)]] means there is one (triangle) obstacle whose vertices are (0,0), (0,1), (1,1).
-    object: a list of vertices of an object, e.g. [(0,0), (0,1), (1,1)] means the object is triangle and its vertices are (0,0), (0,1), (1,1).
+    robot: a list of vertices of a robot, e.g. [(0,0), (0,1), (1,1)] means the robot is triangle and its vertices are (0,0), (0,1), (1,1).
     '''
     results = []
     for obstacle in obstacles:
         if robot_obstacle_intersection(robot, obstacle)!=False:
             results.append(obstacles.index(obstacle))
-    return results
+    if len(results) != 0:
+        return results
+    else:
+        return None
 
 
 def main():
