@@ -16,7 +16,7 @@ Senario 2: Robot collides with obstacles by containing obstacles
 ![](https://github.com/JingxiXu/collision_checker/blob/master/images/outside.png)
 
 Senario 3: Robot collides with obstacles by being contained in an obstacle
-- **output**: ```[3]```
+- **output**: ```[7]```
 ![](https://github.com/JingxiXu/collision_checker/blob/master/images/inside.png)
 
 Senario 4: Robot collides with obstacles by only touching their edges
