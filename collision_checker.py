@@ -302,7 +302,4 @@ def main():
 
 
 if __name__ == "__main__":
-    # point = (6, 1)
-    # obstacle = [(0, 0), (5, 0), (5, 5), (2, 5)]
-    # print(is_point_in_obstacle(point, obstacle))
     main()
