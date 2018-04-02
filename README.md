@@ -23,4 +23,8 @@ Senario 4: Robot free (no collision)
 ## Usage:
 ```cd``` inside this folder and run ```python collision_checker.py```. It outputs a list of obstacle indices in command line and then plot the positions of the robot and obstacles to visualize the collision. ```None``` is returned if no collision occurs.
 
-```world_objects.txt``` is a text file holding information about the positions of all obstacles and the robot. This file will be loaded bby ```collision_checker.py```. The first line of it indicates the total number of objects (obstacles + robot), followed by information about each object. The first line of each object is the number of its edges, followed by positions of each vertices. Whether these vertices show up in an clock-wise or counter clock-wise manner does not make a difference here as long as they are recorded in order.
+```world_objects.txt``` is a text file holding information about the positions of all obstacles and the robot. This file will be loaded by ```collision_checker.py```. 
+
+The first line of it indicates the total number of objects (obstacles + robot), followed by information about each object. The first line of each object is the number of its edges, followed by positions of each vertices. Whether these vertices show up in a clock-wise or counter clock-wise manner does not make a difference here as long as they are recorded in order. 
+
+The last object is interpretted by the program as robot.
