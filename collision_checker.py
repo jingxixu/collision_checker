@@ -157,7 +157,7 @@ def seg_obstacle_intersection(seg, obstacle):
     '''
     seg: a list of 2 vertices, e.g. [(x1, y1), (x2, y2)]
     obstacle: a list of vertices (number of vertices > 2), e.g. [(x1, y1), (x2, y2), (x3, y3)]
-    return False if not intersecting, True if intersecting
+    return whether a segment and a single obstacle have intersections (False if not intersecting, True if intersecting)
     '''
     obstacle_segs = get_segments(obstacle) 
     for obstacle_seg in obstacle_segs:
@@ -171,7 +171,7 @@ def horizontal_line_seg_intersection(point, seg):
     point: (x, y)
     seg: a list of 2 vertices, e.g. [(x1, y1), (x2, y2)]
     Given a point, draw a line through that point which is parallel to x-axis,
-    return the positions of intersections between the line and the segment, return False if there is no intersection
+    return the positions of intersections between the line and the segment. return False if there is no intersection
     '''
     y = float(point[1])
     if max(seg[0][1], seg[1][1]) < y or min(seg[0][1], seg[1][1]) > y:
@@ -195,7 +195,7 @@ def vertical_line_seg_intersection(point, seg):
     point: (x, y)
     seg: a list of 2 vertices, e.g. [(x1, y1), (x2, y2)]
     Given a point, draw a line through that point which is vertical to x-axis,
-    return the positions of intersections between the line and the segment, return False if there is no intersection
+    return the positions of intersections between the line and the segment. return False if there is no intersection
     '''
     x = float(point[0])
     if max(seg[0][0], seg[1][0]) < x or min(seg[0][0], seg[1][0]) > x:
